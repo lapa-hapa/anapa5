@@ -1,0 +1,56 @@
+def print_board(board):
+  """Печатает игровую доску."""
+  for row in board:
+    print("|" + "|".join(row) + "|")
+
+def check_win(board):
+  """Проверяет, выиграл ли кто-нибудь."""
+  for row in board:
+    if row[0] == row[1] == row[2] and row[0] != " ":
+      return row[0]
+  for col in range(3):
+    if board[0][col] == board[1][col] == board[2][col] and board[0][col] != " ":
+      return board[0][col]
+  if board[0][0] == board[1][1] == board[2][2] and board[0][0] != " ":
+    return board[0][0]
+  if board[0][2] == board[1][1] == board[2][0] and board[0][2] != " ":
+    return board[0][2]
+  return None
+
+def get_player_move(board, player):
+  """Получает ход игрока."""
+  while True:
+    try:
+      row = int(input(f"Игрок {player}, введите номер строки (1-3): ")) - 1
+      col = int(input(f"Игрок {player}, введите номер столбца (1-3): ")) - 1
+      if 0 <= row <= 2 and 0 <= col <= 2 and board[row][col] == " ":
+        return row, col
+      else:
+        print("Неверный ход. Попробуйте еще раз.")
+    except ValueError:
+      print("Некорректный ввод. Введите числа.")
+
+def play_game():
+  """Запускает игру."""
+  board = [[" " for _ in range(3)] for _ in range(3)]
+  current_player = "X"
+  game_over = False
+
+  while not game_over:
+    print_board(board)
+    row, col = get_player_move(board, current_player)
+    board[row][col] = current_player
+
+    winner = check_win(board)
+    if winner:
+      print_board(board)
+      print(f"Игрок {winner} победил!")
+      game_over = True
+    elif all(cell != " " for row in board for cell in row):
+      print_board(board)
+      print("Ничья!")
+      game_over = True
+    else:
+      current_player = "O" if current_player == "X" else "X"
+
+play_game()
